@@ -17,11 +17,13 @@ class CitySearchPage extends StatelessWidget {
     '高雄市',
   ];
 
+  CitySearchPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search City'),
+        title: const Text('搜尋城市'),
       ),
       body: ListView.builder(
         itemCount: cities.length,

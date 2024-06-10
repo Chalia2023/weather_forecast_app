@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class WeatherInfo extends StatelessWidget {
   final dynamic weatherData;
 
-  WeatherInfo(this.weatherData);
+  const WeatherInfo(this.weatherData, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../configs/weather_styles.dart';
 import '../providers/weather_provider.dart';
+import '../utils/date_time_utils.dart';
 import '../widgets/loading_indicator.dart';
 import '../widgets/error_handling.dart';
-import 'package:intl/intl.dart';
 
 class HomePage extends ConsumerWidget {
   final TextEditingController _searchController = TextEditingController();
@@ -55,8 +55,8 @@ class HomePage extends ConsumerWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
-              if (weatherState.isLoading) LoadingIndicator(),
+              const SizedBox(height: 20),
+              if (weatherState.isLoading) const LoadingIndicator(),
               if (weatherState.error != null && weatherState.error!.isNotEmpty)
                 ErrorHandling(
                   errorMessage: weatherState.error!,
@@ -113,13 +113,13 @@ class HomePage extends ConsumerWidget {
                                             Container(
                                               // Wrap each date in a container
                                               decoration: BoxDecoration(
-                                                color: Colors.blue.withOpacity(
-                                                    0.5), // Blue color with 50% transparency
-                                                borderRadius: BorderRadius.circular(
-                                                    10), // Rounded corners with a radius of 10
+                                                color: Colors.blue
+                                                    .withOpacity(0.5),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
                                               ),
-                                              padding: const EdgeInsets.all(
-                                                  8.0), // Add padding to the container
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
                                               child: Row(
                                                 children: [
                                                   Row(
@@ -179,7 +179,7 @@ class HomePage extends ConsumerWidget {
                                                             .time[i]
                                                             .parameter
                                                             .parameterName))),
-                                                SizedBox(width: 8),
+                                                const SizedBox(width: 8),
                                                 Text(
                                                   '${wxElement.time[i].parameter.parameterName} (${wxElement.time[i].parameter.parameterValue})',
                                                   style: WeatherStyles
@@ -226,7 +226,7 @@ class HomePage extends ConsumerWidget {
                                             Row(
                                               children: [
                                                 const Icon(Icons.mood),
-                                                SizedBox(width: 8),
+                                                const SizedBox(width: 8),
                                                 Text(
                                                   '舒適度: ${ciElement.time[i].parameter.parameterName}',
                                                   style: WeatherStyles
@@ -243,7 +243,7 @@ class HomePage extends ConsumerWidget {
                                   ),
                               ],
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                           ],
                         ),
                       );
@@ -255,27 +255,5 @@ class HomePage extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  String formatTime(String timeString) {
-    DateTime dateTime = DateTime.parse(timeString);
-    return DateFormat('M/d HH:mm').format(dateTime);
-  }
-
-  String getTimeLabel(String timeString) {
-    final today = DateTime.now();
-    final tomorrow = today.add(const Duration(days: 1));
-    final timeDateTime = DateTime.parse(timeString);
-    String timeLabel = '';
-    if (timeDateTime.year == today.year &&
-        timeDateTime.month == today.month &&
-        timeDateTime.day == today.day) {
-      timeLabel = '今天 ';
-    } else if (timeDateTime.year == tomorrow.year &&
-        timeDateTime.month == tomorrow.month &&
-        timeDateTime.day == tomorrow.day) {
-      timeLabel = '明天 ';
-    }
-    return timeLabel;
   }
 }

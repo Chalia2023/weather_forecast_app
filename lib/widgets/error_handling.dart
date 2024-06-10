@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class ErrorHandling extends StatelessWidget {
   final String errorMessage;
 
-  const ErrorHandling({required this.errorMessage});
+  const ErrorHandling({Key? key, required this.errorMessage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Text(
       errorMessage,
-      style: TextStyle(color: Colors.red),
+      style: const TextStyle(color: Colors.red),
     );
   }
 }

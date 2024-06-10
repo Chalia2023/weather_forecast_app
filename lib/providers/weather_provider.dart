@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/data_models.dart';
 
@@ -39,7 +40,9 @@ class WeatherNotifier extends StateNotifier<WeatherState> {
   WeatherNotifier() : super(WeatherState());
 
   Future<void> fetchWeather(String city) async {
-    print('Fetching weather data for city: $city');
+    if (kDebugMode) {
+      print('Fetching weather data for city: $city');
+    }
     state = state.copyWith(isLoading: true, searchPerformed: true);
 
     String apiKey = 'CWA-A368513C-4524-49FD-87AC-523869937A23';
@@ -53,8 +56,6 @@ class WeatherNotifier extends StateNotifier<WeatherState> {
         },
       );
 
-      print('Response data: $response');
-
       final weatherResponse = WeatherForecastResponse.fromJson(response.data);
       final weatherData = WeatherData.fromResult(weatherResponse.result, city);
 
@@ -65,20 +66,38 @@ class WeatherNotifier extends StateNotifier<WeatherState> {
         clearError();
         state = state.copyWith(isLoading: false, weatherData: weatherData);
       }
+    } on DioException catch (e) {
+      if (kDebugMode) {
+        print('DioError fetching weather data: $e');
+      }
+      if (e.type == DioExceptionType.connectionTimeout) {
+        setError('Connection Timeout Exception');
+      } else if (e.type == DioExceptionType.receiveTimeout) {
+        setError('Receive Timeout Exception');
+      } else {
+        setError('Failed to fetch weather data: $e');
+      }
+      state = state.copyWith(isLoading: false, weatherData: null);
     } catch (e) {
-      print('Error fetching weather data: $e');
+      if (kDebugMode) {
+        print('Error fetching weather data: $e');
+      }
       setError('Failed to fetch weather data: $e');
       state = state.copyWith(isLoading: false, weatherData: null);
     }
   }
 
   void setError(String errorMessage) {
-    print('Setting error: $errorMessage');
+    if (kDebugMode) {
+      print('Setting error: $errorMessage');
+    }
     state = state.copyWith(error: errorMessage);
   }
 
   void clearError() {
-    print('Clearing error');
+    if (kDebugMode) {
+      print('Clearing error');
+    }
     state = state.copyWith(error: null);
   }
 }
